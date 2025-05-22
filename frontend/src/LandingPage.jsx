@@ -49,9 +49,9 @@ export default function FacilitySearch() {
 
   return (
     <div className="p-4 max-w-xl mx-auto">
-      <h1 className="flex flex-col text-2xl font-semibold mb-8">
+      <p className="flex flex-col text-5xl font-semibold mb-8">
         Search <span className="text-blue-600">{sports[sportIndex]}</span> Courts in SG
-      </h1>
+      </p>
       <button
         onClick={handleSearch}
         className="w-full flex items-center justify-start px-4 py-2 border rounded shadow text-left bg-white hover:bg-gray-100"
@@ -65,7 +65,7 @@ export default function FacilitySearch() {
       {loading && <p className="mt-4 text-sm text-blue-500">Fetching nearby courts...</p>}
       {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
 
-      <ul className="mt-4 min-w-md space-y-3">
+      <ul className="mt-4 space-y-3">
         {courts.map((court) => (
           <li key={court.id} className="border rounded p-3 shadow-sm">
             <p className="font-medium">{court.name} 100m away</p>
