@@ -7,7 +7,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-const facilities = [
+const courts = [
   {
     id: 1,
     name: 'Badminton Court',
@@ -26,12 +26,12 @@ const facilities = [
   },
 ];
 
-app.get('/api/facilities', (req, res) => {
+app.get('/api/courts', (req, res) => {
   const { lat, lng } = req.query;
   if (!lat || !lng) {
     return res.status(400).json({ error: 'Missing lat/lng' });
   }
-  res.json(facilities);
+  res.json(courts);
 });
 
 app.listen(PORT, () => {

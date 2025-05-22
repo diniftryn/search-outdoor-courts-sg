@@ -1,10 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function FacilitySearch() {
+  const sports = ['Badminton', 'Basketball', 'Street Soccer', 'Sepak Takraw'];
+  const [sportIndex, setSportIndex] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [facilities, setFacilities] = useState([]);
+  const [courts, setCourts] = useState([]);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSportIndex((prev) => (prev + 1) % sports.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleSearch = () => {
     if (!navigator.geolocation) {
@@ -19,12 +28,12 @@ export default function FacilitySearch() {
       async (position) => {
         try {
           const { latitude, longitude } = position.coords;
-          const res = await axios.get(`http://localhost:5000/api/facilities`, {
+          const res = await axios.get(`http://localhost:5000/api/courts`, {
             params: { lat: latitude, lng: longitude },
           });
-          setFacilities(res.data);
+          setCourts(res.data);
         } catch (err) {
-          setError("Failed to fetch facilities.");
+          setError("Failed to fetch courts.");
         } finally {
           setLoading(false);
         }
@@ -38,8 +47,8 @@ export default function FacilitySearch() {
 
   return (
     <div className="p-4 max-w-xl mx-auto">
-      <h1 className="text-2xl font-semibold mb-4">
-        Search <span className="text-blue-500">Outdoor Courts</span> Near You
+      <h1 className="flex flex-col text-2xl font-semibold mb-8">
+        Search <span className="text-blue-600">{sports[sportIndex]}</span> Courts in SG
       </h1>
       <button
         onClick={handleSearch}
@@ -54,11 +63,11 @@ export default function FacilitySearch() {
       {loading && <p className="mt-4 text-sm text-blue-500">Fetching nearby courts...</p>}
       {error && <p className="mt-4 text-sm text-red-500">{error}</p>}
 
-      <ul className="mt-4 space-y-3">
-        {facilities.map((facility) => (
-          <li key={facility.id} className="border rounded p-3 shadow-sm">
-            <p className="font-medium">{facility.name} 100m away</p>
-            <p className="text-sm text-gray-500">{facility.address}</p>
+      <ul className="mt-4 min-w-md space-y-3">
+        {courts.map((court) => (
+          <li key={court.id} className="border rounded p-3 shadow-sm">
+            <p className="font-medium">{court.name} 100m away</p>
+            <p className="text-sm text-gray-500">{court.address}</p>
           </li>
         ))}
       </ul>
